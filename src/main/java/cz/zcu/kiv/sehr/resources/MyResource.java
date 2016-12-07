@@ -1,4 +1,6 @@
-package cz.zcu.kiv.resources;
+package cz.zcu.kiv.sehr.resources;
+
+import io.swagger.annotations.Api;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
@@ -9,6 +11,7 @@ import javax.ws.rs.core.MediaType;
  * Root resource (exposed at "myresource" path)
  */
 @Path("myresource")
+@Api
 public class MyResource {
 
     /**
