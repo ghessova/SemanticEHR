@@ -51,9 +51,7 @@
                         <phase>package</phase>
                         <configuration>
                             <!-- optional only if you want to use a preconfigured server.xml file -->
-                            <!--
-                            <serverXml>src/main/tomcatconf/server.xml</serverXml>
-                            -->
+                            <!-- <serverXml>src/main/tomcatconf/server.xml</serverXml> -->
                             <warRunDependencies>
                                 <warRunDependency>
                                     <dependency>
@@ -176,10 +174,42 @@
             <version>2.2.6</version>
         </dependency>
 
+        <!--httpclient, http-client cache, httpcore, httpmime and commons-logging are used for FileUploaderClient-->
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.5.2</version>
+        </dependency>
 
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient-cache -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient-cache</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpcore -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpcore</artifactId>
+            <version>4.4.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpmime -->
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpmime</artifactId>
+            <version>4.5.2</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/commons-logging/commons-logging -->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.2</version>
+        </dependency>
 
     </dependencies>
-
-
 
 </project>
