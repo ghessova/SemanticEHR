@@ -1,7 +1,9 @@
 package cz.zcu.kiv.sehr.resources;
 
+import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
+import org.openehr.am.archetype.Archetype;
 
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
@@ -23,7 +25,7 @@ public class ArchetypesResource {
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
                                @FormDataParam("file") FormDataContentDisposition fileDetail) {
-        // check if all form parameters are provided
+        /*// check if all form parameters are provided
         if (uploadedInputStream == null || fileDetail == null)
             return Response.status(400).entity("Invalid form data").build();
         // create our destination folder, if it not exists
@@ -41,7 +43,16 @@ public class ArchetypesResource {
             return Response.status(500).entity("Can not save file").build();
         }
         return Response.status(200)
-                .entity("File saved to " + uploadedFileLocation).build();
+                .entity("File saved to " + uploadedFileLocation).build();*/
+        try {
+            ArchetypeParser archetypeParser = new ArchetypeParser();
+            archetypeParser.processArchetypeInputStream(uploadedInputStream);
+            return Response.status(200).entity("Success").build();
+
+        } catch (Exception e) {
+            return Response.status(500).entity("Failed").build();
+        }
+
     }
 
     /**

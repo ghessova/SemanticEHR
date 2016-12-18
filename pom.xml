@@ -148,6 +148,28 @@
             <!-- use the following artifactId if you don't need servlet 2.x compatibility -->
             <!-- artifactId>jersey-container-servlet</artifactId -->
         </dependency>
+
+        <!-- ! adl-parser and aom must be added to local repository ! -->
+        <dependency>
+            <groupId>org.openehr</groupId>
+            <artifactId>adl-parser</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.openehr</groupId>
+            <artifactId>aom</artifactId>
+            <version>1.0.5</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/log4j/log4j -->
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+        </dependency>
+
+
         <!-- uncomment this to get JSON support
         <dependency>
             <groupId>org.glassfish.jersey.media</groupId>
