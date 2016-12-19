@@ -2,6 +2,7 @@
 /target/
 /.settings/
 
+# Eclipse project files
 .project
 .classpath
 workbench.xmi

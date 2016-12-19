@@ -1,6 +1,7 @@
 package cz.zcu.kiv.sehr.archetypes;
 
 import org.bson.Document;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
 
 import java.io.PrintWriter;
 
@@ -15,6 +16,12 @@ public class ArchetypeTree {
     ArchetypeNode node, nodeParent;
     boolean split;
     int rank;
+
+    ArchetypeOntology ontology;
+
+    public ArchetypeTree(ArchetypeOntology ontology) {
+        this.ontology = ontology;
+    }
   
     /**
      * inserts node to tree
@@ -33,7 +40,6 @@ public class ArchetypeTree {
         else if ( parent.equals( "" )) {
             if ( !doesNodeExist( ID )) {
                 root.addChild(node);
-                node.setRank(root.children.size() - 1);
             }
         }
         else if ( !doesNodeExist( ID )) {
@@ -41,7 +47,6 @@ public class ArchetypeTree {
             findNode( getNodeParent( parent ), -1 );        // -1 is start of search, node is set to root
             if ( this.nodeParent != null ) {
                 nodeParent.addChild(node);
-                node.setRank(nodeParent.children.size() - 1 );
             }
             else {
                 
@@ -167,7 +172,7 @@ public class ArchetypeTree {
      * @param i index, rank of child which is next
      *          when method is called -1 signifies root, rest is done automaticaly with recursion 
      */
-    void print( PrintWriter pw, int i ) {
+    void print(PrintWriter pw, int i) {
         
         if ( i == -1 ) {
             
@@ -177,6 +182,7 @@ public class ArchetypeTree {
         if ( this.node.children.isEmpty()) {
             
             pw.println( "       \"" + this.node.ID + "\":{" );
+            pw.println( "           \"name\":\"" + ontology.termDefinition("en", this.node.ID) + "\"," );
             if ( this.node.type != null ) pw.println( "           \"type\":\"" + this.node.type + "\"," );
             else pw.println( "           \"type\":\"String\"," );
             pw.println( "           \"isRequired\":\"" + this.node.required + "\"," );

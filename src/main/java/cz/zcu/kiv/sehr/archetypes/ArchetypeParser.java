@@ -197,7 +197,7 @@ public class ArchetypeParser {
             e.printStackTrace();
             return null;
         }*/
-        ArchetypeTree tree = new ArchetypeTree();
+        ArchetypeTree tree = new ArchetypeTree(archetype.getOntology());
         buildTree( archetype, tree );
         Document doc = new Document();
         doc.append("description", archetype.getArchetypeId().rmEntity().toLowerCase());

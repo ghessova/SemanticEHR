@@ -8,9 +8,7 @@ import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openehr.am.archetype.Archetype;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
@@ -24,9 +22,75 @@ public class ArchetypesResource {
     /** The path to the folder where we want to store the uploaded files */
     private static final String UPLOAD_FOLDER = "uploaded/";
 
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getArchetype(@HeaderParam("archetypeId") String archetypeId) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("list")
+    public Response listArchetypes(@HeaderParam("from") String from, @HeaderParam("count") String count) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response deleteArchetype(@HeaderParam("archetypeId") String archetypeId) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("request")
+    public Response listRequests(@HeaderParam("from") String from, @HeaderParam("size") String size, @HeaderParam("userId") String userId) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
+    @POST
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("request")
+    public Response requestAddingArchetype(@HeaderParam("archetypeId") String archetypeId) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
+    @DELETE
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("request")
+    public Response deleteRequest(@HeaderParam("archetypeId") String archetypeId) {
+        //todo
+        return Response
+                .status(200)
+                .entity(new Document("todo", true).toJson())
+                .build();
+    }
+
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    public Response uploadFile(@FormDataParam("file") InputStream uploadedInputStream,
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response uploadArchetype(@FormDataParam("file") InputStream uploadedInputStream,
                                @FormDataParam("file") FormDataContentDisposition fileDetail) {
         /*// check if all form parameters are provided
         if (uploadedInputStream == null || fileDetail == null)
@@ -94,5 +158,7 @@ public class ArchetypesResource {
             theDir.mkdir();
         }
     }
+
+
 
 }
