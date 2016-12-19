@@ -49,7 +49,7 @@ public class ArchetypesResource {
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
             Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
-            MongoDBConnector.addDocument(document);
+            MongoDBConnector.getInstance().addDocument(document);
             return Response.status(200).entity("Success").build();
 
         } catch (Exception e) {
