@@ -197,12 +197,18 @@ public class ArchetypeParser {
             e.printStackTrace();
             return null;
         }*/
+        if (archetype.getOntology() == null) {
+            System.out.println("dffsdfsdfsdfsdfs");
+        }
+        else {
+            System.out.println("aaaaaaaaaaaaaaaaaa");
+        }
         ArchetypeTree tree = new ArchetypeTree(archetype.getOntology());
         buildTree( archetype, tree );
         Document doc = new Document();
         doc.append("description", archetype.getArchetypeId().rmEntity().toLowerCase());
         doc.append("name", archetype.getArchetypeId().localID());
-        doc.append("properties", tree.root.getDocument());
+        doc.append("properties", tree.root.getDocument(archetype.getOntology()));
         /*pw.println( "{" );
         pw.println( "   \"description\":\"" + archetype.getArchetypeId().rmEntity().toLowerCase() + "\"," );
         pw.println( "   \"name\":\"" + archetype.getArchetypeId().localID() + "\"," );

@@ -182,7 +182,6 @@ public class ArchetypeTree {
         if ( this.node.children.isEmpty()) {
             
             pw.println( "       \"" + this.node.ID + "\":{" );
-            pw.println( "           \"name\":\"" + ontology.termDefinition("en", this.node.ID) + "\"," );
             if ( this.node.type != null ) pw.println( "           \"type\":\"" + this.node.type + "\"," );
             else pw.println( "           \"type\":\"String\"," );
             pw.println( "           \"isRequired\":\"" + this.node.required + "\"," );

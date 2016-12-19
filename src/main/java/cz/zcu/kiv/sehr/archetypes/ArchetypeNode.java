@@ -1,6 +1,8 @@
 package cz.zcu.kiv.sehr.archetypes;
 
 import org.bson.Document;
+import org.openehr.am.archetype.ontology.ArchetypeOntology;
+import org.openehr.am.archetype.ontology.ArchetypeTerm;
 
 import java.util.ArrayList;
 
@@ -82,19 +84,27 @@ public class ArchetypeNode {
         child.setRank(this.children.size() - 1);
     }
 
-    Document getDocument()
+    Document getDocument(ArchetypeOntology ontology)
     {
+        ArchetypeTerm term = ontology.termDefinition("en",ID);
+
         Document doc = new Document();
         if(children != null && children.size() > 0)
         {
             doc.append("type", "object");
+            if (term != null) {
+                doc.append("name", ontology.termDefinition("en", ID).getItem("text"));
+            }
             for(ArchetypeNode node: children)
             {
-                doc.append(node.ID, node.getDocument());
+                doc.append(node.ID, node.getDocument(ontology));
             }
         }
         else
         {
+            if (term != null) {
+                doc.append("name", ontology.termDefinition("en", ID).getItem("text"));
+            }
             if ( this.type != null ) doc.append("type", type);
             else doc.append("type", "string");
             doc.append("isRequired", isRequired());

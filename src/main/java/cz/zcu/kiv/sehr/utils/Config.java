@@ -21,7 +21,7 @@ public class Config {
     static
     {
         try {
-            properties.load(new FileReader("resources/config.properties"));
+            properties.load(new FileReader(CONFIG_NAME));
         } catch (FileNotFoundException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -123,7 +123,7 @@ public class Config {
 
     public static DBConnector getDBC()
     {
-        return (DBConnector)getInstance("DBConnector");
+        return (DBConnector)getInstance(getString("DBConnector"));
     }
 
     public static String getDBAddress()
