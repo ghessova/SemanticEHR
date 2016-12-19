@@ -3,22 +3,23 @@ package cz.zcu.kiv.sehr.database;
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import cz.zcu.kiv.sehr.utils.Config;
 import org.bson.Document;
 
 /**
  * Singleton class managing DB connection
  *
  */
-public class MongoDBConnector {
+public class MongoDBConnector implements DBConnector {
 
     /** Singleton instance */
-    private static final MongoDBConnector INSTANCE = new MongoDBConnector();
+    private static final DBConnector INSTANCE = new MongoDBConnector();
 
     /** IP address for MongoDB client */
-    private final String IP_ADDRESS = "147.228.127.146";
+    private final String IP_ADDRESS = Config.getDBAddress();
 
     /** Database name */
-    private final String DB_NAME = "sehr";
+    private final String DB_NAME = Config.getDBName();
 
     /** Connection to database server */
     private MongoClient connection = null;
@@ -26,7 +27,7 @@ public class MongoDBConnector {
     /**
      * Singleton instance obtainer
      */
-    public static MongoDBConnector getInstance() {
+    public static DBConnector getInstance() {
         return INSTANCE;
     }
 
@@ -71,6 +72,7 @@ public class MongoDBConnector {
      *
      * @param document - Document to be added
      */
+    @Override
     public void addDocument(Document document)
     {
         MongoCollection<Document> definitions = getDatabase().getCollection("definitions");

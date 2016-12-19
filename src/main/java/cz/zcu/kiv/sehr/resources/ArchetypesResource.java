@@ -2,6 +2,7 @@ package cz.zcu.kiv.sehr.resources;
 
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
 import cz.zcu.kiv.sehr.database.MongoDBConnector;
+import cz.zcu.kiv.sehr.utils.Config;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -49,7 +50,7 @@ public class ArchetypesResource {
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
             Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
-            MongoDBConnector.getInstance().addDocument(document);
+            Config.getDBC().addDocument(document);
             return Response.status(200).entity("Success").build();
 
         } catch (Exception e) {
