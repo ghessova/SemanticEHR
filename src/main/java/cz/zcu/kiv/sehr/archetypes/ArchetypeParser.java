@@ -1,5 +1,6 @@
 package cz.zcu.kiv.sehr.archetypes;
 
+import org.bson.Document;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.CObject;
 import se.acode.openehr.parser.ADLParser;
@@ -186,18 +187,23 @@ public class ArchetypeParser {
         return occurrences;
     }
 
-    public void processArchetypeInputStream(InputStream stream) {
+    public Document processArchetypeInputStream(InputStream stream) {
 
         Archetype archetype = parseFile(stream);
-        PrintWriter pw = null;
+        /*PrintWriter pw = null;
         try {
             pw = new PrintWriter( new File("archetype.json") );
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            return;
-        }
+            return null;
+        }*/
         ArchetypeTree tree = new ArchetypeTree();
-        pw.println( "{" );
+        buildTree( archetype, tree );
+        Document doc = new Document();
+        doc.append("description", archetype.getArchetypeId().rmEntity().toLowerCase());
+        doc.append("name", archetype.getArchetypeId().localID());
+        doc.append("properties", tree.root.getDocument());
+        /*pw.println( "{" );
         pw.println( "   \"description\":\"" + archetype.getArchetypeId().rmEntity().toLowerCase() + "\"," );
         pw.println( "   \"name\":\"" + archetype.getArchetypeId().localID() + "\"," );
         SimpleDateFormat sdf = new SimpleDateFormat( "dd/MM/yyyy HH:mm:ss" );
@@ -207,8 +213,8 @@ public class ArchetypeParser {
         tree.print( pw, -1 );                                                 // -1 beginning of listing, node is set to root
         pw.println( "   }" );
         pw.println( "}" );
-        pw.close();
-
+        pw.close();*/
+        return doc;
     }
 
 

@@ -1,5 +1,7 @@
 package cz.zcu.kiv.sehr.archetypes;
 
+import org.bson.Document;
+
 import java.io.PrintWriter;
 
 

@@ -24,7 +24,7 @@ public class FileUploaderClient {
 
         // the file we want to upload
         //File inFile = new File("/home/gabi/main.cf");
-        File inFile = new File("/home/gabi/openEHR-EHR-CLUSTER.address.v1.adl");
+        File inFile = new File("/data/git/SemanticEHR/data/openEHR-EHR-CLUSTER.address.v1.adl");
         FileInputStream fis = null;
         try {
             fis = new FileInputStream(inFile);

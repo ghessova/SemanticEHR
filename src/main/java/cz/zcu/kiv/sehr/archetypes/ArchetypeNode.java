@@ -1,5 +1,7 @@
 package cz.zcu.kiv.sehr.archetypes;
 
+import org.bson.Document;
+
 import java.util.ArrayList;
 
 
@@ -78,5 +80,27 @@ public class ArchetypeNode {
         this.children.add(child);
         child.setParent(this);
         child.setRank(this.children.size() - 1);
+    }
+
+    Document getDocument()
+    {
+        Document doc = new Document();
+        if(children != null && children.size() > 0)
+        {
+            doc.append("type", "object");
+            for(ArchetypeNode node: children)
+            {
+                doc.append(node.ID, node.getDocument());
+            }
+        }
+        else
+        {
+            if ( this.type != null ) doc.append("type", type);
+            else doc.append("type", "string");
+            doc.append("isRequired", isRequired());
+            if(occurrences != null)
+                doc.append("occurences", occurrences);
+        }
+        return doc;
     }
 }

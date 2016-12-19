@@ -1,6 +1,8 @@
 package cz.zcu.kiv.sehr.resources;
 
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
+import cz.zcu.kiv.sehr.database.MongoDBConnector;
+import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
 import org.openehr.am.archetype.Archetype;
@@ -46,7 +48,8 @@ public class ArchetypesResource {
                 .entity("File saved to " + uploadedFileLocation).build();*/
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
-            archetypeParser.processArchetypeInputStream(uploadedInputStream);
+            Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
+            MongoDBConnector.addDocument(document);
             return Response.status(200).entity("Success").build();
 
         } catch (Exception e) {
