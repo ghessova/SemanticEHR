@@ -2,17 +2,25 @@ package cz.zcu.kiv.sehr.test;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpDelete;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.mime.MultipartEntity;
 import org.apache.http.entity.mime.content.InputStreamBody;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
+import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by ghessova on 17.12.16.
@@ -21,7 +29,13 @@ public class FileUploaderClient {
 
 
     public static void main(String[] args) {
+        deleteDocument();
+        //uploadFile();
 
+
+    }
+
+    private static void uploadFile() {
         // the file we want to upload
         File inFile = new File("/home/gabi/openEHR-EHR-CLUSTER.address.v1.adl");
         //File inFile = new File("/data/git/SemanticEHR/data/openEHR-EHR-CLUSTER.address.v1.adl");
@@ -57,5 +71,31 @@ public class FileUploaderClient {
             } catch (IOException e) {
             }
         }
+    }
+
+    public static void deleteDocument() {
+        try {
+            DefaultHttpClient httpclient = new DefaultHttpClient(new BasicHttpParams());
+
+            //HttpDelete httpDelete = new HttpDelete("http://localhost:8080/webapi/archetypes&archetypeId=" + "5858fcf7adb83d12ce02bacb");
+            HttpDelete httpDelete = new HttpDelete("http://localhost:8080/webapi/archetypes");
+            HttpResponse response = httpclient.execute(httpDelete);
+
+            int statusCode = response.getStatusLine().getStatusCode();
+            HttpEntity responseEntity = response.getEntity();
+            String responseString = EntityUtils.toString(responseEntity, "UTF-8");
+
+            System.out.println("[" + statusCode + "] " + responseString);
+        /*List<NameValuePair> params = new ArrayList<NameValuePair>();
+        params.add(new BasicNameValuePair("archetypeId", "5858fcf7adb83d12ce02bacb"));
+        try {
+            httpDelete.setsetEntity(new UrlEncodedFormEntity(params, HTTP.UTF_8));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }*/
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
