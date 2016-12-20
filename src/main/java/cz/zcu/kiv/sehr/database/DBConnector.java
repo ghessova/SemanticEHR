@@ -21,8 +21,9 @@ public interface DBConnector {
      * Adds single document to collection.
      * @param collection collection name
      * @param document - Document to be added
+     * @return true when successfully added, false otherwise
      */
-    void addDocument(Document document, String collection);
+    boolean addDocument(Document document, String collection);
 
     /**
      * Attempts to delete document by id from a collections.
@@ -54,5 +55,5 @@ public interface DBConnector {
      * @param collection collection name
      * @return list of documents
      */
-    List<Document> findDocuments(Bson query, String collection);
+    List<Document> findDocuments(Bson query, String collection, int skip, int limit);
 }

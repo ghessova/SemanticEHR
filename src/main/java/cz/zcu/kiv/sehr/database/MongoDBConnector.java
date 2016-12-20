@@ -6,14 +6,17 @@ import com.mongodb.MongoClient;
 import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
 import com.mongodb.client.result.DeleteResult;
-import com.mongodb.util.JSON;
 import cz.zcu.kiv.sehr.utils.Config;
-import org.bson.BSON;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.bson.Document;
 import org.bson.conversions.Bson;
 import org.bson.types.ObjectId;
 
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -21,6 +24,9 @@ import java.util.List;
  *
  */
 public class MongoDBConnector implements DBConnector {
+
+    Logger logger = LogManager.getLogger(MongoDBConnector.class);
+
 
     /** Singleton instance */
     private static final DBConnector INSTANCE = new MongoDBConnector();
@@ -45,7 +51,9 @@ public class MongoDBConnector implements DBConnector {
      * Private constructor
      *
      */
-    private MongoDBConnector() { /* */ }
+    private MongoDBConnector() {
+        initialize();
+    }
 
     /**
      * Get connection to database server
@@ -79,10 +87,16 @@ public class MongoDBConnector implements DBConnector {
 
 
     @Override
-    public void addDocument(Document document, String collection)
+    public boolean addDocument(Document document, String collection)
     {
-        MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
-        mongoCollection.insertOne(document);
+        try {
+            MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
+            mongoCollection.insertOne(document);
+            return true;
+        } catch (Exception e) {
+            logger.error("Error while adding document to collection " + collection  + ", document: " + document.toString() + ", exception:\n" + e.getMessage());
+            return false;
+        }
     }
 
     @Override
@@ -95,26 +109,58 @@ public class MongoDBConnector implements DBConnector {
 
     @Override
     public long removeDocument(Bson query, String collection) {
-        MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
-        DeleteResult result = mongoCollection.deleteOne(query);
-        return result.getDeletedCount();
+
+        try {
+            MongoCollection<Document>  mongoCollection = getDatabase().getCollection(collection);
+            DeleteResult result = mongoCollection.deleteOne(query);
+            return result.getDeletedCount();
+        } catch (Exception e) {
+            logger.error("Could not remove document from collection " + collection  + ", parameters json: " + query.toString() + ", exception:\n" + e.getMessage());
+            return 0;
+        }
+
     }
 
     @Override
     public Document findDocumentById(String id, String collection) {
         BasicDBObject query = new BasicDBObject();
         query.put("_id", new ObjectId(id));
-        List<Document> results = findDocuments(query, collection);
-        if (results != null && results.size() > 0) {
+        List<Document> results = findDocuments(query, collection, 0, 0);
+        if (results.size() > 0) {
             return results.get(0);
         }
         return null;
     }
 
     @Override
-    public List<Document> findDocuments(Bson query, String collection) {
-        MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
-        FindIterable<Document> resultSet = mongoCollection.find();
-        return Lists.newArrayList(resultSet);
+    public List<Document> findDocuments(Bson query, String collection, int skip, int limit) {
+        try {
+            MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
+            FindIterable<Document> resultSet = mongoCollection.find(query);
+            if (skip > 0) {
+                resultSet = resultSet.skip(skip);
+            }
+            if (limit > 0) {
+                resultSet = resultSet.limit(limit);
+            }
+            return Lists.newArrayList(resultSet);
+        } catch (Exception e) {
+            logger.error("Error while searching for documents in collection " + collection  + ", parameters json: " + query.toString() + ", exception:\n" + e.getMessage());
+            return Collections.emptyList();
+        }
+
     }
+
+
+    private void initialize() {
+        MongoCollection<Document> mongoCollection = getDatabase().getCollection(Config.DEFINITIONS);
+
+        Document uniqueIndex = new Document("archetypeId", 3);
+        mongoCollection.createIndex(uniqueIndex, new IndexOptions().unique(true));
+
+        Document textIndex = new Document("archetypeId", "text"); //to allow fulltext search
+        mongoCollection.createIndex(textIndex);
+    }
+
+
 }

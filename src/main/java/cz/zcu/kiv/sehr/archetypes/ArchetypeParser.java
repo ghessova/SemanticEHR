@@ -1,6 +1,7 @@
 package cz.zcu.kiv.sehr.archetypes;
 
 import org.bson.Document;
+import org.bson.types.ObjectId;
 import org.openehr.am.archetype.Archetype;
 import org.openehr.am.archetype.constraintmodel.CObject;
 import se.acode.openehr.parser.ADLParser;
@@ -197,17 +198,12 @@ public class ArchetypeParser {
             e.printStackTrace();
             return null;
         }*/
-        if (archetype.getOntology() == null) {
-            System.out.println("dffsdfsdfsdfsdfs");
-        }
-        else {
-            System.out.println("aaaaaaaaaaaaaaaaaa");
-        }
+
         ArchetypeTree tree = new ArchetypeTree(archetype.getOntology());
         buildTree( archetype, tree );
         Document doc = new Document();
         doc.append("description", archetype.getArchetypeId().rmEntity().toLowerCase());
-        doc.append("name", archetype.getArchetypeId().localID());
+        doc.append("archetypeId", archetype.getArchetypeId().localID());
         doc.append("properties", tree.root.getDocument(archetype.getOntology()));
         /*pw.println( "{" );
         pw.println( "   \"description\":\"" + archetype.getArchetypeId().rmEntity().toLowerCase() + "\"," );
@@ -222,6 +218,5 @@ public class ArchetypeParser {
         pw.close();*/
         return doc;
     }
-
 
 }

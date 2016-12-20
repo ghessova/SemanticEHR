@@ -119,7 +119,7 @@ public class ArchetypesResource {
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
             Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
-            Config.getDBC().addDocument(document, "definitions");
+            Config.getDBC().addDocument(document, Config.DEFINITIONS);
             return Response.status(200).entity("Success").build();
 
         } catch (Exception e) {

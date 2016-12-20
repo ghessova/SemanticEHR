@@ -15,6 +15,11 @@ public class Config {
 
     private static final Properties properties = new Properties();
 
+    //constants
+    public static final String DEFINITIONS = "definitions"; //name of collection to store archetypes definitions
+    public static final String REQUESTS = "requests"; //name of collection to store archetypes requests
+    public static final String DOCUMENTS = "documents"; //name of collection to store user data
+
     private static Writer writer;
 
     //private static OutputStream out;

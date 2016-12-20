@@ -29,8 +29,8 @@ public class FileUploaderClient {
 
 
     public static void main(String[] args) {
-        deleteDocument();
-        //uploadFile();
+        //deleteDocument();
+        uploadFile();
 
 
     }
