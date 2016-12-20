@@ -14,7 +14,7 @@ import java.io.InputStream;
 
 /**
  * Created by ghessova on 19.12.16.
- * Service managing user data
+ * Service for managing documents representing user data
  */
 @Path("documents")
 @Api(value="documents", description="Service for managing documents.")
@@ -22,15 +22,25 @@ public class DocumentsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Finds documents", response = DocumentWrapper.class)
+    public Response getDocuments(@QueryParam("documentId") String documentId) {
+        //todo
+        return null;
+    }
+
+    @GET
+    @Path("{documentId}")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds document with specific ID", response = DocumentWrapper.class)
-    public Response getDocument(@HeaderParam("documentId") String documentId) {
+    public Response getDocument(@PathParam("documentId") String documentId) {
         //todo
         return null;
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
-    public Response deleteDocument(@HeaderParam("documentId") String documentId) {
+    @ApiOperation(value="Deletes document with specific ID")
+    public Response deleteDocument(@QueryParam("documentId") String documentId) {
         //todo
         return Response
                 .status(200)
@@ -40,10 +50,11 @@ public class DocumentsResource {
 
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Submits new document containing user data")
     public Response uploadDocument(@FormDataParam("file") InputStream uploadedInputStream,
                                    @FormDataParam("file") FormDataContentDisposition fileDetail,
-                                   @HeaderParam("name") String name,
-                                   @HeaderParam("archetypeId") String archetypeId) {
+                                   @QueryParam("name") String name,
+                                   @QueryParam("archetypeId") String archetypeId) {
         //todo
         return Response
                 .status(200)
@@ -55,7 +66,7 @@ public class DocumentsResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON) //userId will be used e.g. by data sharing
-    public Response listDocuments(@HeaderParam("from") String from, @HeaderParam("count") String count, @HeaderParam("userId") String userId) {
+    public Response listDocuments(@QueryParam("from") String from, @QueryParam("count") String count, @QueryParam("userId") String userId) {
         //todo
         return Response
                 .status(200)
@@ -63,14 +74,12 @@ public class DocumentsResource {
                 .build();
     }
 
-    /**
-     * service for sharing specific document with specific user
-     */
     @POST
     @Path("share")
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response uploadDocument(@HeaderParam("documentId") String documentId,
-                                   @HeaderParam("userId") String userId) {
+    @ApiOperation(value="Shares specified document with specified user")
+    public Response uploadDocument(@QueryParam("documentId") String documentId,
+                                   @QueryParam("userId") String userId) {
         //todo
         return Response
                 .status(200)
