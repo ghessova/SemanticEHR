@@ -3,6 +3,7 @@ package cz.zcu.kiv.sehr.resources;
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
 import cz.zcu.kiv.sehr.database.MongoDBConnector;
 import cz.zcu.kiv.sehr.utils.Config;
+import io.swagger.annotations.Api;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -17,6 +18,7 @@ import java.io.*;
  * Created by ghessova on 17.12.16.
  */
 @Path("archetypes")
+@Api(description="Service for managing archetypes.")
 public class ArchetypesResource {
 
     /** The path to the folder where we want to store the uploaded files */
@@ -47,6 +49,9 @@ public class ArchetypesResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     public Response deleteArchetype(@HeaderParam("archetypeId") String archetypeId) {
+        archetypeId = "5858fcf7adb83d12ce02bacb";
+        long deleted =  Config.getDBC().removeDocumentById(archetypeId, "definitions");
+
         //todo
         return Response
                 .status(200)
@@ -114,7 +119,7 @@ public class ArchetypesResource {
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
             Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
-            Config.getDBC().addDocument(document);
+            Config.getDBC().addDocument(document, "definitions");
             return Response.status(200).entity("Success").build();
 
         } catch (Exception e) {
