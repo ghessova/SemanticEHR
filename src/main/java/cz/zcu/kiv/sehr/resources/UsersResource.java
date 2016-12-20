@@ -17,8 +17,8 @@ import org.bson.Document;
  * Users resource (exposed at "users" path)
  *
  */
-@Api
 @Path("users")
+@Api(description="Service for managing users")
 public class UsersResource {
 
     /**
