@@ -18,7 +18,7 @@ import org.bson.Document;
  *
  */
 @Api
-@Path("")
+@Path("Service maintaning authentication")
 public class AuthenticationResource {
 
     /**

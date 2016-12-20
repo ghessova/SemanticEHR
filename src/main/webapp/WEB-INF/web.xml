@@ -15,6 +15,10 @@
             <!--multipart in ArchetypesResource-->
             <param-value>org.glassfish.jersey.media.multipart.MultiPartFeature</param-value>
         </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+            <param-value>cz.zcu.kiv.sehr.CORSFilter</param-value>
+        </init-param>
         <load-on-startup>1</load-on-startup>
     </servlet>
 
@@ -35,6 +39,19 @@
             <param-name>swagger.api.basepath</param-name>
             <param-value>http://localhost:8080/webapi</param-value>
         </init-param>
+        <init-param>
+            <param-name>com.sun.jersey.spi.container.ContainerResponseFilters</param-name>
+            <param-value>cz.zcu.kiv.sehr.CORSFilter</param-value>
+        </init-param>
         <load-on-startup>2</load-on-startup>
     </servlet>
+    <filter>
+        <filter-name>CorsFilter</filter-name>
+        <!-- TopCat contains catalina so on the server this dependency is resolved-->
+        <filter-class>org.apache.catalina.filters.CorsFilter</filter-class>
+    </filter>
+    <filter-mapping>
+        <filter-name>CorsFilter</filter-name>
+        <url-pattern>/*</url-pattern>
+    </filter-mapping>
 </web-app>
