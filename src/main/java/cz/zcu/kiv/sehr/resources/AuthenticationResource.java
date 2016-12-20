@@ -1,6 +1,7 @@
 package cz.zcu.kiv.sehr.resources;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
@@ -17,8 +18,8 @@ import org.bson.Document;
  * Resource maintaing user authentication
  *
  */
-@Api
-@Path("Service maintaning authentication")
+@Path("")
+@Api(value="login", description="Maintaing authentication")
 public class AuthenticationResource {
 
     /**
@@ -29,6 +30,7 @@ public class AuthenticationResource {
     @GET
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Check if user is logged in", response = Document.class)
     public Response isLogged(@HeaderParam("token") String apiToken) {
 
         // TODO Write logic of checking token validity
@@ -45,6 +47,7 @@ public class AuthenticationResource {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Authenticate user", response = Document.class)
     public Response loginUser(@FormParam("user") String user, @FormParam("password") String password) {
 
         // TODO Write logic of actuall user creating
@@ -60,6 +63,7 @@ public class AuthenticationResource {
      */
     @POST
     @Path("logout")
+    @ApiOperation(value="Invalidate user's token")
     public Response destroyToken(@HeaderParam("token") String apiToken) {
 
         // TODO Write logic of destroying token

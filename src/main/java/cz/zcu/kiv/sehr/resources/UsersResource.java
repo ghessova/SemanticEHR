@@ -1,6 +1,7 @@
 package cz.zcu.kiv.sehr.resources;
 
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
@@ -18,7 +19,7 @@ import org.bson.Document;
  *
  */
 @Path("users")
-@Api(description="Service for managing users")
+@Api(value="users", description="Service for managing users")
 public class UsersResource {
 
     /**
@@ -28,6 +29,7 @@ public class UsersResource {
      */
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Return all registered users", response = Document.class)
     public Response getUsers() {
 
         // TODO Actuall user getting
@@ -41,6 +43,7 @@ public class UsersResource {
      *
      */
     @POST
+    @ApiOperation(value="Create new user", response = Document.class)
     public Response addUser() {
 
         // TODO Actual adding user logic
@@ -53,6 +56,7 @@ public class UsersResource {
      *
      */
     @PUT
+    @ApiOperation(value="Update users with specified params", response = Document.class)
     public Response updateUsers() {
 
         // TODO Write actuall updating logic
@@ -69,6 +73,7 @@ public class UsersResource {
     @GET
     @Path("id")
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Get user with requested ID", response = Document.class)
     public Response getUser() {
 
         // TODO Actual user finding
@@ -82,6 +87,7 @@ public class UsersResource {
     */
     @PUT
     @Path("id")
+    @ApiOperation(value="Update user of requested ID", response = Document.class)
     public Response updateUser() {
 
         // TODO Write actuall updating logic
@@ -96,6 +102,7 @@ public class UsersResource {
      */
     @DELETE
     @Path("id")
+    @ApiOperation(value="Delete user of requested ID", response = Document.class)
     public Response deleteUser() {
 
         // TODO Write actuall updating logic
