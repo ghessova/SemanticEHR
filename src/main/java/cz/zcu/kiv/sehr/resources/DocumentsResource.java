@@ -1,5 +1,8 @@
 package cz.zcu.kiv.sehr.resources;
 
+import cz.zcu.kiv.sehr.model.DataDocument;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -14,16 +17,15 @@ import java.io.InputStream;
  * Service managing user data
  */
 @Path("documents")
+@Api(value="documents", description="Service for managing documents.")
 public class DocumentsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    public Response getDocument(@HeaderParam("documentId") String documentId) {
+    @ApiOperation(value="Finds document with specific ID", response = DataDocument.class)
+    public DataDocument getDocument(@HeaderParam("documentId") String documentId) {
         //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+        return null;
     }
 
     @DELETE

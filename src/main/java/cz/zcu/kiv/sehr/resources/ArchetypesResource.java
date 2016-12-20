@@ -2,9 +2,12 @@ package cz.zcu.kiv.sehr.resources;
 
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
 import cz.zcu.kiv.sehr.database.MongoDBConnector;
+import cz.zcu.kiv.sehr.model.ArchetypeRequest;
+import cz.zcu.kiv.sehr.model.DataDocument;
 import cz.zcu.kiv.sehr.utils.Config;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import javax.xml.bind.annotation.XmlRootElement;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -67,7 +70,7 @@ public class ArchetypesResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
-    @ApiOperation(value="Lists all archetype addition requests", response = Document.class, responseContainer = "List")
+    @ApiOperation(value="Lists all archetype addition requests", response = ArchetypeRequest.class, responseContainer = "List")
     public Response listRequests(@HeaderParam("from") String from, @HeaderParam("size") String size, @HeaderParam("userId") String userId) {
         //todo
         return Response
