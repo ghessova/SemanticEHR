@@ -1,6 +1,6 @@
 package cz.zcu.kiv.sehr.resources;
 
-import cz.zcu.kiv.sehr.model.DataDocument;
+import cz.zcu.kiv.sehr.model.DocumentWrapper;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.bson.Document;
@@ -22,8 +22,8 @@ public class DocumentsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value="Finds document with specific ID", response = DataDocument.class)
-    public DataDocument getDocument(@HeaderParam("documentId") String documentId) {
+    @ApiOperation(value="Finds document with specific ID", response = DocumentWrapper.class)
+    public Response getDocument(@HeaderParam("documentId") String documentId) {
         //todo
         return null;
     }

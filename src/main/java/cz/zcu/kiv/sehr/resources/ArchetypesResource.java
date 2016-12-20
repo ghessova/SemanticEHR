@@ -1,23 +1,25 @@
 package cz.zcu.kiv.sehr.resources;
 
+import com.mongodb.util.JSON;
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
-import cz.zcu.kiv.sehr.database.MongoDBConnector;
+import cz.zcu.kiv.sehr.dao.ArchetypesDAO;
 import cz.zcu.kiv.sehr.model.ArchetypeRequest;
-import cz.zcu.kiv.sehr.model.DataDocument;
 import cz.zcu.kiv.sehr.utils.Config;
+import cz.zcu.kiv.sehr.utils.PagingParams;
+import cz.zcu.kiv.sehr.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import javax.xml.bind.annotation.XmlRootElement;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
-import org.openehr.am.archetype.Archetype;
 
+import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by ghessova on 17.12.16.
@@ -28,24 +30,48 @@ public class ArchetypesResource {
 
     /** The path to the folder where we want to store the uploaded files */
     private static final String UPLOAD_FOLDER = "uploaded/";
+    private ArchetypesDAO archetypesDAO = ArchetypesDAO.getInstance();
 
+    public static final int DEFAULT_LIMIT = 10;
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Finds archetypes", response = Document.class)
+    public Response getArchetypes(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
+
+            PagingParams pagingParams = Utils.processPagingParams(from, count);
+            if (pagingParams == null) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
+            List<Document> results = archetypesDAO.getArchetypes(pagingParams);
+
+            return Response
+                    .status(Response.Status.OK)
+                    .entity(JSON.serialize(results))
+                    .build();
+
+    }
+
+    @GET
+    @Path("{archetypeId}")
+    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds archetype with specific ID", response = Document.class)
-    public Response getArchetype(@HeaderParam("archetypeId") String archetypeId) {
-        //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+    public Response getArchetype(@PathParam("archetypeId") String archetypeId) {
+        Document result =  archetypesDAO.findArchetypeById(archetypeId);
+        if (result == null) {
+            return Response.status(Response.Status.NOT_FOUND).build();
+        }
+        else {
+            return Response.status(Response.Status.OK).entity(result.toJson()).build();
+        }
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("list")
     @ApiOperation(value="Lists all archetypes", response = Document.class, responseContainer = "List")
-    public Response listArchetypes(@HeaderParam("from") String from, @HeaderParam("count") String count) {
+    public Response listArchetypes(@QueryParam("from") String from, @QueryParam("count") String count) {
         //todo
         return Response
                 .status(200)
@@ -56,26 +82,33 @@ public class ArchetypesResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Deletes archetype with specific ID")
-    public Response deleteArchetype(@HeaderParam("archetypeId") String archetypeId) {
-        archetypeId = "5858fcf7adb83d12ce02bacb";
-        long deleted =  Config.getDBC().removeDocumentById(archetypeId, "definitions");
+    public Response deleteArchetype(@QueryParam("archetypeId") String archetypeId) {
+        long deleted = archetypesDAO.deleteArchetypeById(archetypeId);
 
-        //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+        if (deleted > 0) {
+            return Response.status(200).build();
+        }
+        else {
+            return Response.status(404).build();
+        }
+
+
     }
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Lists all archetype addition requests", response = ArchetypeRequest.class, responseContainer = "List")
-    public Response listRequests(@HeaderParam("from") String from, @HeaderParam("size") String size, @HeaderParam("userId") String userId) {
-        //todo
+    public Response listRequests(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
+        PagingParams pagingParams = Utils.processPagingParams(from, count);
+        if (pagingParams == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+
+        List<Document> results = archetypesDAO.getRequests(pagingParams); // TODO filter by user
         return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
+                .status(Response.Status.OK)
+                .entity(JSON.serialize(results))
                 .build();
     }
 
@@ -84,41 +117,68 @@ public class ArchetypesResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Request for adding new archetype")
-    public Response requestAddingArchetype(JsonObject body, @HeaderParam("archetypeId") String archetypeId) {
-        //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+    public Response requestAddingArchetype(JsonObject body, @QueryParam("archetypeId") String archetypeId) {
+        long added = archetypesDAO.insertRequest("0", archetypeId); // TODO add real user id
+        if(added > 0)
+            return Response.status(200).build();
+        else
+            return Response.status(400).build();
+        // TODO create unique index on userId and archetypeId
     }
 
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Delete request for archetype addition")
-    public Response deleteRequest(@HeaderParam("archetypeId") String archetypeId) {
-        //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+    public Response deleteRequest(@QueryParam("archetypeId") String archetypeId) {
+        long deleted = archetypesDAO.deleteRequestById(archetypeId);
+
+        if (deleted > 0) {
+            return Response.status(200).build();
+        }
+        else {
+            return Response.status(404).build();
+        }
     }
 
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
-    @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Add archetype from ADL file")
     public Response uploadArchetype(@FormDataParam("file") InputStream uploadedInputStream,
                                @FormDataParam("file") FormDataContentDisposition fileDetail) {
         try {
             ArchetypeParser archetypeParser = new ArchetypeParser();
             Document document = archetypeParser.processArchetypeInputStream(uploadedInputStream);
-            Config.getDBC().addDocument(document, Config.DEFINITIONS);
-            return Response.status(200).entity("Success").build();
+            int code = archetypesDAO.insertArchetype(document);
+            if (code == 1) {
+                return Response.status(200).build();
+            }
+            else {
+                return Response.status(400).build();
+            }
 
         } catch (Exception e) {
-            return Response.status(500).entity("Failed").build();
+            return Response.status(500).build();
         }
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    @ApiOperation(value="Searches for archetypes by keyword", response = Document.class)
+    public Response searchArchetypes(@QueryParam("keyword") @DefaultValue("0") String keyword, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
+
+        PagingParams pagingParams = Utils.processPagingParams(from, count);
+        if (pagingParams == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<Document> results = archetypesDAO.searchForArchetypes(keyword, pagingParams);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(JSON.serialize(results))
+                .build();
 
     }
 

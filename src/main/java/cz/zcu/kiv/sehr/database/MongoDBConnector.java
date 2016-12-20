@@ -158,8 +158,10 @@ public class MongoDBConnector implements DBConnector {
         Document uniqueIndex = new Document("archetypeId", 3);
         mongoCollection.createIndex(uniqueIndex, new IndexOptions().unique(true));
 
-        Document textIndex = new Document("archetypeId", "text"); //to allow fulltext search
+        Document textIndex = new Document("archetypeId", "text").append("name", "text"); //to allow fulltext search
         mongoCollection.createIndex(textIndex);
+
+
     }
 
 

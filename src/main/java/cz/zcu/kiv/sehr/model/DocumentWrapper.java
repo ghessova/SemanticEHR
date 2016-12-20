@@ -7,7 +7,7 @@ import java.util.Date;
 /**
  * Created by ondraprazak on 20.12.16.
  */
-public class DataDocument {
+public class DocumentWrapper {
 
     Date created;
 
