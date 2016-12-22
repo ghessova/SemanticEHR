@@ -19,6 +19,7 @@ public class Config {
     public static final String DEFINITIONS = "definitions"; //name of collection to store archetypes definitions
     public static final String REQUESTS = "requests"; //name of collection to store archetypes requests
     public static final String DOCUMENTS = "documents"; //name of collection to store user data
+    public static final String USERS = "users"; //name of collection to store existing user's
 
     private static Writer writer;
 

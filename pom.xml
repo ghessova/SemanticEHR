@@ -238,6 +238,13 @@
             <version>2.25</version>
         </dependency>
 
+        <!-- JsonObject -->
+        <dependency>
+            <groupId>javax.json</groupId>
+            <artifactId>javax.json-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+
     </dependencies>
 
 </project>
