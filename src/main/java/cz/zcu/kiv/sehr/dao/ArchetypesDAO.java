@@ -40,26 +40,13 @@ public class ArchetypesDAO {
 
     }
 
-    public long deleteDocumentById(String id) {
 
-        return Config.getDBC().removeDocumentById(id, Config.DOCUMENTS);
-
-    }
 
     public int insertArchetype(Document document) {
         return Config.getDBC().addDocument(document, Config.DEFINITIONS) ? 1 : 0;
     }
 
-    public int insertDocument(String userId, String documentName, String archetypeId, Document document) {
-        Document record = new Document();
-        record.append("userId", userId);
-        record.append("name", documentName);
-        record.append("archetypeId", archetypeId);
-        record.append("datetime", new Date().toString()); //todo date format
-        record.append("data", document);
-        return Config.getDBC().addDocument(record, Config.DEFINITIONS) ? 1 : 0;
 
-    }
 
     public int insertRequest(String userId, String archetypeId) {
         Document record = new Document();
@@ -73,9 +60,6 @@ public class ArchetypesDAO {
         return Config.getDBC().findDocumentById(archetypeId, Config.DEFINITIONS);
     }
 
-    public Document findDocumentById(String documentId) {
-        return Config.getDBC().findDocumentById(documentId, Config.DOCUMENTS);
-    }
 
     public List<Document> getArchetypes(PagingParams pagingParams) {
         return Config.getDBC().findDocuments(new BasicDBObject(), Config.REQUESTS,  pagingParams.skip, pagingParams.limit);

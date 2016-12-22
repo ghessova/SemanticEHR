@@ -9,6 +9,7 @@ import com.mongodb.client.MongoDatabase;
 import com.mongodb.client.model.IndexOptions;
 import com.mongodb.client.model.Indexes;
 import com.mongodb.client.result.DeleteResult;
+import com.mongodb.client.result.UpdateResult;
 import cz.zcu.kiv.sehr.utils.Config;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -151,12 +152,25 @@ public class MongoDBConnector implements DBConnector {
 
     }
 
+    @Override
+    public long updateDocument(String id, String collection, Bson updatedFields) {
+        MongoCollection<Document> mongoCollection = getDatabase().getCollection(collection);
+        BasicDBObject searchQuery = new BasicDBObject().append("_id", new ObjectId(id));
+
+        BasicDBObject newDocument = new BasicDBObject();
+        newDocument.append("$set", updatedFields);
+
+        UpdateResult result = mongoCollection.updateOne(searchQuery, newDocument);
+        return result.getModifiedCount();
+    }
+
 
     private void initialize() {
+        //indices on collection definitions
         MongoCollection<Document> mongoCollection = getDatabase().getCollection(Config.DEFINITIONS);
 
         Document uniqueIndex = new Document("archetypeId", 3);
-        mongoCollection.createIndex(uniqueIndex, new IndexOptions().unique(true));
+        mongoCollection.createIndex(uniqueIndex, new IndexOptions().unique(true)); //creates index if not exists, archetypeId must be unique
 
         Document textIndex = new Document("archetypeId", "text").append("name", "text"); //to allow fulltext search
         mongoCollection.createIndex(textIndex);

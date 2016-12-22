@@ -23,4 +23,14 @@ public class Utils {
             return new PagingParams(skip, limit);
         }
     }
+
+    public static boolean isEmpty(String s) {
+        if (s == null) {
+            return true;
+        }
+        else if ("".equals(s)) {
+            return true;
+        }
+        return false;
+    }
 }

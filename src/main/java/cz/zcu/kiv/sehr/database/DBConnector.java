@@ -19,15 +19,17 @@ public interface DBConnector {
 
     /**
      * Adds single document to collection.
+     *
      * @param collection collection name
-     * @param document - Document to be added
+     * @param document   - Document to be added
      * @return true when successfully added, false otherwise
      */
     boolean addDocument(Document document, String collection);
 
     /**
      * Attempts to delete document by id from a collections.
-     * @param id inner document id
+     *
+     * @param id         inner document id
      * @param collection collection name
      * @return number of actually deleted documents
      */
@@ -35,7 +37,8 @@ public interface DBConnector {
 
     /**
      * Attempts to delete document from a collections .
-     * @param query json representing query parameters according to mongo query language
+     *
+     * @param query      json representing query parameters according to mongo query language
      * @param collection collection name
      * @return number of actually deleted documents
      */
@@ -43,7 +46,8 @@ public interface DBConnector {
 
     /**
      * Finds document by id.
-     * @param id inner document id
+     *
+     * @param id         inner document id
      * @param collection collection name
      * @return document or null if not found
      */
@@ -51,9 +55,20 @@ public interface DBConnector {
 
     /**
      * Finds documents by query.
-     * @param query json representing query parameters according to mongo query language
+     *
+     * @param query      json representing query parameters according to mongo query language
      * @param collection collection name
      * @return list of documents
      */
     List<Document> findDocuments(Bson query, String collection, int skip, int limit);
+
+    /**
+     *
+     * @param id
+     * @param collection
+     * @param updatedFields
+     * @return
+     */
+    long updateDocument(String id, String collection, Bson updatedFields);
+
 }
