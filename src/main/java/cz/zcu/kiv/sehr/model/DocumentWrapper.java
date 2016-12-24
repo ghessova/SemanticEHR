@@ -22,11 +22,12 @@ public class DocumentWrapper {
 
     Document data;
 
-    public DocumentWrapper(Date created, String userId, String archetypeId, String name) {
+    public DocumentWrapper(Date created, String userId, String archetypeId, String name, List<String> sharedWith) {
         this.created = created;
         this.userId = userId;
         this.archetypeId = archetypeId;
         this.name = name;
+        this.sharedWith = sharedWith;
     }
 
     public Date getCreated() {

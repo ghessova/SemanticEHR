@@ -90,7 +90,8 @@ public class DocumentsDAO {
     {
         List<Document> documents = this.findDocuments(archetypeId, userId, pagingParams);
         return documents.stream().map(document -> new DocumentWrapper(document.getDate("datetime"),
-                document.getString("userId"), document.getString("archetypeId"), document.getString("name")))
+                document.getString("userId"), document.getString("archetypeId"), document.getString("name"),
+                (ArrayList<String>)document.get("sharedWith")))
                 .collect(Collectors.toList());
     }
 
