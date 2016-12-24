@@ -19,7 +19,7 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 /**
- * Resource maintaing user authentication
+ * Resource maintaining user authentication
  *
  */
 @Path("")

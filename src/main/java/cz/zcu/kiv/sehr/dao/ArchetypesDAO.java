@@ -62,12 +62,12 @@ public class ArchetypesDAO {
 
 
     public List<Document> getArchetypes(PagingParams pagingParams) {
-        return Config.getDBC().findDocuments(new BasicDBObject(), Config.REQUESTS,  pagingParams.skip, pagingParams.limit);
+        return Config.getDBC().findDocuments(new BasicDBObject(), Config.DEFINITIONS,  pagingParams.skip, pagingParams.limit);
     }
 
     public List<Document> getRequests(PagingParams pagingParams, String userId) {
         BasicDBObject query = new BasicDBObject("userId",userId);
-        return Config.getDBC().findDocuments(query, Config.DEFINITIONS,  pagingParams.skip, pagingParams.limit);
+        return Config.getDBC().findDocuments(query, Config.REQUESTS,  pagingParams.skip, pagingParams.limit);
     }
 
     public List<Document> getRequests(PagingParams pagingParams) {
