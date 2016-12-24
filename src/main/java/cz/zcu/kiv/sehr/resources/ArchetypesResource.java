@@ -9,6 +9,8 @@ import cz.zcu.kiv.sehr.utils.PagingParams;
 import cz.zcu.kiv.sehr.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -37,6 +39,8 @@ public class ArchetypesResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds archetypes", response = Document.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getArchetypes(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
 
             PagingParams pagingParams = Utils.processPagingParams(from, count);
@@ -56,6 +60,8 @@ public class ArchetypesResource {
     @Path("{archetypeId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds archetype with specific ID", response = Document.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getArchetype(@PathParam("archetypeId") String archetypeId) {
         Document result =  archetypesDAO.findArchetypeById(archetypeId);
         if (result == null) {
@@ -71,6 +77,8 @@ public class ArchetypesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("list")
     @ApiOperation(value="Lists all archetypes", response = Document.class, responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 403, message = "Invalid access token") })
     public Response listArchetypes(@QueryParam("from") String from, @QueryParam("count") String count) {
         //todo
         return Response
@@ -82,6 +90,8 @@ public class ArchetypesResource {
     @DELETE
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Deletes archetype with specific ID")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response deleteArchetype(@QueryParam("archetypeId") String archetypeId) {
         long deleted = archetypesDAO.deleteArchetypeById(archetypeId);
 
@@ -99,6 +109,8 @@ public class ArchetypesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Lists all archetype addition requests", response = ArchetypeRequest.class, responseContainer = "List")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response listRequests(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
         PagingParams pagingParams = Utils.processPagingParams(from, count);
         if (pagingParams == null) {
@@ -117,6 +129,8 @@ public class ArchetypesResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Request for adding new archetype")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response requestAddingArchetype(JsonObject body, @QueryParam("archetypeId") String archetypeId) {
         long added = archetypesDAO.insertRequest("0", archetypeId); // TODO add real user id
         if(added > 0)
@@ -130,6 +144,8 @@ public class ArchetypesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Delete request for archetype addition")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response deleteRequest(@QueryParam("archetypeId") String archetypeId) {
         long deleted = archetypesDAO.deleteRequestById(archetypeId);
 
@@ -144,6 +160,8 @@ public class ArchetypesResource {
     @POST
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation(value="Add archetype from ADL file")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response uploadArchetype(@FormDataParam("file") InputStream uploadedInputStream,
                                @FormDataParam("file") FormDataContentDisposition fileDetail) {
         try {
@@ -167,6 +185,8 @@ public class ArchetypesResource {
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
     @ApiOperation(value="Searches for archetypes by keyword", response = Document.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response searchArchetypes(@QueryParam("keyword") @DefaultValue("0") String keyword, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
 
         PagingParams pagingParams = Utils.processPagingParams(from, count);

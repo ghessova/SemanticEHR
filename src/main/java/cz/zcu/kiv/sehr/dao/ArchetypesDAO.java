@@ -1,6 +1,7 @@
 package cz.zcu.kiv.sehr.dao;
 
 import com.mongodb.BasicDBObject;
+import cz.zcu.kiv.sehr.model.DocumentWrapper;
 import cz.zcu.kiv.sehr.utils.Config;
 import cz.zcu.kiv.sehr.utils.PagingParams;
 import org.apache.log4j.LogManager;

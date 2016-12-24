@@ -176,6 +176,9 @@ public class MongoDBConnector implements DBConnector {
         Document textIndex = new Document("$**", "text");
         mongoCollection.createIndex(textIndex);
 
+        mongoCollection = getDatabase().getCollection(Config.DOCUMENTS);
+        mongoCollection.createIndex(textIndex);
+
 
     }
 

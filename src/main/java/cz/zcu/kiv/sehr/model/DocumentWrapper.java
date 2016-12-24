@@ -3,6 +3,7 @@ package cz.zcu.kiv.sehr.model;
 import org.bson.Document;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by ondraprazak on 20.12.16.
@@ -17,7 +18,16 @@ public class DocumentWrapper {
 
     String name;
 
+    List<String> sharedWith;
+
     Document data;
+
+    public DocumentWrapper(Date created, String userId, String archetypeId, String name) {
+        this.created = created;
+        this.userId = userId;
+        this.archetypeId = archetypeId;
+        this.name = name;
+    }
 
     public Date getCreated() {
         return created;
@@ -57,5 +67,13 @@ public class DocumentWrapper {
 
     public void setData(Document data) {
         this.data = data;
+    }
+
+    public List<String> getSharedWith() {
+        return sharedWith;
+    }
+
+    public void setSharedWith(List<String> sharedWith) {
+        this.sharedWith = sharedWith;
     }
 }

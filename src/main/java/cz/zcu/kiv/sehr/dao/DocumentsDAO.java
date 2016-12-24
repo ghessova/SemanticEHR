@@ -2,13 +2,17 @@ package cz.zcu.kiv.sehr.dao;
 
 import com.mongodb.BasicDBObject;
 import com.mongodb.util.JSON;
+import cz.zcu.kiv.sehr.model.DocumentWrapper;
 import cz.zcu.kiv.sehr.utils.Config;
 import cz.zcu.kiv.sehr.utils.PagingParams;
 import cz.zcu.kiv.sehr.utils.Utils;
 import org.bson.Document;
 
+import java.util.ArrayDeque;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by ghessova on 22.12.16.
@@ -59,6 +63,7 @@ public class DocumentsDAO {
         record.append("name", documentName);
         record.append("archetypeId", archetypeId);
         record.append("datetime", new Date().toString()); //todo date format
+        record.append("sharedWith", new ArrayList<String>());
         record.append("data", document);
         return Config.getDBC().addDocument(record, Config.DEFINITIONS) ? 1 : 0;
 
@@ -79,5 +84,19 @@ public class DocumentsDAO {
         }
         return Config.getDBC().updateDocument(documentId, Config.DOCUMENTS, changedFieldsDoc);
 
+    }
+
+    public List<DocumentWrapper> listDocuments(String archetypeId, String userId, PagingParams pagingParams)
+    {
+        List<Document> documents = this.findDocuments(archetypeId, userId, pagingParams);
+        return documents.stream().map(document -> new DocumentWrapper(document.getDate("datetime"),
+                document.getString("userId"), document.getString("archetypeId"), document.getString("name")))
+                .collect(Collectors.toList());
+    }
+
+    public List<Document> searchDocuments(String keyword, PagingParams pagingParams)
+    {
+        BasicDBObject query = new BasicDBObject("$text", new BasicDBObject("$search", keyword));
+        return Config.getDBC().findDocuments(query, Config.DOCUMENTS,  pagingParams.skip, pagingParams.limit);
     }
 }

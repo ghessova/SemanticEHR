@@ -7,6 +7,8 @@ import cz.zcu.kiv.sehr.utils.PagingParams;
 import cz.zcu.kiv.sehr.utils.Utils;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.bson.Document;
 import org.glassfish.jersey.media.multipart.FormDataContentDisposition;
 import org.glassfish.jersey.media.multipart.FormDataParam;
@@ -32,6 +34,8 @@ public class DocumentsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds documents by archetypeId or for a specific user", response = DocumentWrapper.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getDocuments(@QueryParam("archetypeId") String archetypeId, @QueryParam("userId") String userId, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
         PagingParams pagingParams = Utils.processPagingParams(from, count);
         if (pagingParams == null) {
@@ -49,6 +53,8 @@ public class DocumentsResource {
     @Path("{documentId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds document with specific ID", response = DocumentWrapper.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getDocument(@PathParam("documentId") String documentId) {
         Document result =  documentsDAO.findDocumentById(documentId);
         if (result == null) {
@@ -60,9 +66,12 @@ public class DocumentsResource {
     }
 
     @DELETE
+    @Path("{documentId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Deletes document with specific ID")
-    public Response deleteDocument(@QueryParam("documentId") String documentId) {
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    public Response deleteDocument(@PathParam("documentId") String documentId) {
         long deleted = documentsDAO.deleteDocumentById(documentId);
 
         if (deleted > 0) {
@@ -76,28 +85,33 @@ public class DocumentsResource {
     @POST
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Submits new document containing user data")
-    public Response uploadDocument(@FormDataParam("file") InputStream uploadedInputStream,
-                                   @FormDataParam("file") FormDataContentDisposition fileDetail,
-                                   @QueryParam("name") String name,
-                                   @QueryParam("archetypeId") String archetypeId) {
-
-
-        //todo
-        return Response
-                .status(200)
-                .entity(new Document("todo", true).toJson())
-                .build();
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
+    public Response uploadDocument(@FormDataParam("document") Document document, @QueryParam("name") String name, @QueryParam("archetypeId") String archetypeId){
+        //// TODO: 24.12.16 strange parameters
+        long added = documentsDAO.insertDocument("0" /*TODO */, name, archetypeId, document);
+        if(added > 0)
+            return Response.status(200).build();
+        else
+            return Response.status(400).build();
 
     }
 
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON) //userId will be used e.g. by data sharing
-    public Response listDocuments(@QueryParam("from") String from, @QueryParam("count") String count, @QueryParam("userId") String userId) {
-        //todo
+    @ApiOperation(value="Lists basic info about documents")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    public Response listDocuments(@QueryParam("from") String from, @QueryParam("count") String count, @QueryParam("archetypeId") String archetypeId) {
+        String userId = "0"; //TODO
+        PagingParams pagingParams = Utils.processPagingParams(from, count);
+        if (pagingParams == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<DocumentWrapper> results = documentsDAO.listDocuments(archetypeId, userId, pagingParams);
         return Response
                 .status(200)
-                .entity(new Document("todo", true).toJson())
+                .entity(JSON.serialize(results))
                 .build();
     }
 
@@ -105,12 +119,43 @@ public class DocumentsResource {
     @Path("share")
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Shares specified document with specified user")
-    public Response uploadDocument(@QueryParam("documentId") String documentId,
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    public Response shareDocument(@QueryParam("documentId") String documentId,
                                    @QueryParam("userId") String userId) {
-        //todo
+        Document document = documentsDAO.findDocumentById(documentId);
+        if(document == null)
+            return Response.status(404).build();
+        List<String> users = (List<String>)document.get("sharedWith");
+        if(!users.contains(userId))
+        {
+            users.add(userId);
+            documentsDAO.editDocument(documentId, document.toJson());
+        }
+
         return Response
                 .status(200)
-                .entity(new Document("todo", true).toJson())
+                .build();
+
+    }
+
+    @GET
+    @Produces(MediaType.APPLICATION_JSON)
+    @Path("search")
+    @ApiOperation(value="Searches for documents by keyword", response = Document.class)
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    public Response searchArchetypes(@QueryParam("keyword") @DefaultValue("0") String keyword, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
+
+        PagingParams pagingParams = Utils.processPagingParams(from, count);
+        if (pagingParams == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        List<Document> results = documentsDAO.searchDocuments(keyword, pagingParams);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(JSON.serialize(results))
                 .build();
 
     }
