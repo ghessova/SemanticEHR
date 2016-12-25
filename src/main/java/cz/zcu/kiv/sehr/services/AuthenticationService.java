@@ -3,9 +3,14 @@ package cz.zcu.kiv.sehr.services;
 import java.math.BigInteger;
 import java.security.SecureRandom;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
+import org.bson.Document;
+
+import cz.zcu.kiv.sehr.dao.UsersDAO;
 import cz.zcu.kiv.sehr.model.UserWrapper;
+import cz.zcu.kiv.sehr.utils.PagingParams;
 
 /**
  * Resvice managing users authentication and access token generating
@@ -32,9 +37,24 @@ public class AuthenticationService {
      *
      */
     public UserWrapper authenticate(String username, String password) throws Exception {
-        // TODO Write authentication logic once there will be some default users
+        UserWrapper loggedUser = new UserWrapper();
 
-        return new UserWrapper();
+        List<Document> users = UsersDAO.getInstance().getUsers(new PagingParams(0, 0));
+        for (Document user : users) {
+            if ((username == user.getString("username")) && (password == user.getString("password"))) {
+
+                // Prepare user object to return
+                loggedUser.setUsername(user.getString("username"));
+                loggedUser.setPassword(user.getString("password"));
+                loggedUser.setRole(user.getString("role"));
+                loggedUser.setEmailAddress(user.getString("emailAddress"));
+
+                // Return loggedUser
+                return loggedUser;
+            }
+        }
+
+        throw new RuntimeException("Invalid username or password");
     }
 
     /**

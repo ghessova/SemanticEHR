@@ -8,7 +8,7 @@ public class PagingParams {
     public int skip;
     public int limit;
 
-    PagingParams(int skip, int limit) {
+    public PagingParams(int skip, int limit) {
         this.skip = skip;
         this.limit = limit;
     }

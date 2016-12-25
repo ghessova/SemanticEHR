@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiResponses;
  * Resource maintaining user authentication
  *
  */
-@Path("")
+@Path("auth")
 @Api(value="login", description="Maintaing authentication")
 public class AuthenticationResource {
 
