@@ -18,6 +18,7 @@ import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import com.mongodb.util.JSON;
 
+import cz.zcu.kiv.sehr.bindings.Secured;
 import cz.zcu.kiv.sehr.dao.UsersDAO;
 import cz.zcu.kiv.sehr.model.UserWrapper;
 import cz.zcu.kiv.sehr.utils.PagingParams;
@@ -51,7 +52,7 @@ public class UsersResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Return all registered users", response = UserWrapper.class, responseContainer = "List")
-    @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
+    @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response getUsers(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + PAGE_SIZE) String count) {
         Response res = null;
 
@@ -76,7 +77,7 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Create new user with requested data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
-        @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
+        @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response addUser(@FormDataParam("user") UserWrapper user) {
         Response res = null;
         long added = UsersDB.insertUser(user);
@@ -97,7 +98,7 @@ public class UsersResource {
     @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Get user with requested ID", response = UserWrapper.class)
-    @ApiResponses(value = { @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    @ApiResponses(value = { @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 401, message = "Invalid access token") })
     public Response getUser(@PathParam("userId") String documentId) {
         Response res = null;
         Document user = UsersDB.findUserById(documentId);
@@ -115,7 +116,7 @@ public class UsersResource {
     @PUT
     @ApiOperation(value="Update user with presented data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
-        @ApiResponse(code = 400, message= "Bar parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
+        @ApiResponse(code = 400, message= "Bar parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response updateUser(@FormDataParam("user") UserWrapper user) {
         Response res = null;
         long updated = UsersDB.insertUser(user);
@@ -136,7 +137,7 @@ public class UsersResource {
     @Path("{userId}")
     @ApiOperation(value="Delete user of requested ID")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
-        @ApiResponse(code = 404, message= "User not found"), @ApiResponse(code = 403, message = "Invalid access token") } )
+        @ApiResponse(code = 404, message= "User not found"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response deleteUser(@PathParam("userId") String documentId) {
         Response res = null;
         long deleted = UsersDB.deleteUserById(documentId);

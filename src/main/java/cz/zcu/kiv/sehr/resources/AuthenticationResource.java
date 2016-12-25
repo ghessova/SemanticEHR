@@ -1,6 +1,6 @@
 package cz.zcu.kiv.sehr.resources;
 
-import javax.ws.rs.FormParam;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.GET;
 import javax.ws.rs.HeaderParam;
 import javax.ws.rs.POST;
@@ -9,9 +9,12 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.bson.Document;
+import org.glassfish.jersey.media.multipart.FormDataParam;
 
 import cz.zcu.kiv.sehr.model.AuthenticationResponse;
+import cz.zcu.kiv.sehr.model.UserWrapper;
+import cz.zcu.kiv.sehr.services.AuthenticationService;
+import cz.zcu.kiv.sehr.model.AuthenticationRequest;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,13 +37,11 @@ public class AuthenticationResource {
     @GET
     @Path("login")
     @ApiOperation(value="Check if user is logged in")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Token is valid"), @ApiResponse(code = 403, message = "Invalid access token") } )
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Token is valid"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response isLogged(@HeaderParam("token") String apiToken) {
+        boolean result = AuthenticationService.getInstance().validateToken(apiToken);
 
-        // TODO Write logic of checking token validity
-        return Response.status(200)
-            .entity(new Document("logged", true).toJson())
-            .build();
+        return Response.status((result == true) ? Response.Status.NO_CONTENT : Response.Status.UNAUTHORIZED).build();
     }
 
     /**
@@ -51,14 +52,31 @@ public class AuthenticationResource {
     @POST
     @Path("login")
     @Produces(MediaType.APPLICATION_JSON)
+    @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Authenticate user", response = AuthenticationResponse.class)
     @ApiResponses(value = { @ApiResponse(code = 403, message = "Username or password") } )
-    public Response loginUser(@FormParam("user") String user, @FormParam("password") String password) {
+    public Response loginUser(@FormDataParam("credentials") AuthenticationRequest credentials) {
+        Response res = null;
+        AuthenticationResponse response = new AuthenticationResponse();
 
-        // TODO Write logic of actuall user creating
-        return Response.status(200)
-            .entity(new Document("logged", true).toJson())
-            .build();
+        UserWrapper user = null;
+        String token = null;
+
+        try {
+            user = AuthenticationService.getInstance().authenticate(credentials.getUsername(), credentials.getPassword());
+            token = AuthenticationService.getInstance().issueToken(user);
+
+            response.setUser(user);
+            response.setAccessToken(token);
+
+            res = Response.status(Response.Status.OK)
+                    .entity(response)
+                    .build();
+        } catch (Exception e) {
+            res = Response.status(Response.Status.FORBIDDEN).build();
+        }
+
+        return res;
     }
 
     /**
@@ -69,11 +87,10 @@ public class AuthenticationResource {
     @POST
     @Path("logout")
     @ApiOperation(value="Invalidate user's token")
-    @ApiResponses(value = { @ApiResponse(code = 204, message = "Token is valid"), @ApiResponse(code = 403, message = "Invalid access token") } )
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "Token is valid"), @ApiResponse(code = 401, message = "Invalid access token") } )
     public Response destroyToken(@HeaderParam("token") String apiToken) {
+        boolean result = AuthenticationService.getInstance().invalidateToken(apiToken);
 
-        // TODO Write logic of destroying token
-        return Response.status(204)
-            .build();
+        return Response.status((result == true) ? Response.Status.NO_CONTENT : Response.Status.UNAUTHORIZED).build();
     }
 }
