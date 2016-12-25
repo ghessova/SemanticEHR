@@ -32,6 +32,7 @@ public class DocumentsResource {
     private DocumentsDAO documentsDAO = DocumentsDAO.getInstance();
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds documents by archetypeId or for a specific user", response = DocumentWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
@@ -50,6 +51,7 @@ public class DocumentsResource {
     }
 
     @GET
+    @Secured
     @Path("{documentId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds document with specific ID", response = DocumentWrapper.class)
@@ -66,6 +68,7 @@ public class DocumentsResource {
     }
 
     @DELETE
+    @Secured
     @Path("{documentId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Deletes document with specific ID")
@@ -83,6 +86,7 @@ public class DocumentsResource {
     }
 
     @POST
+    @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Submits new document containing user data")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
@@ -97,6 +101,7 @@ public class DocumentsResource {
     }
 
     @GET
+    @Secured
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON) //userId will be used e.g. by data sharing
     @ApiOperation(value="Lists basic info about documents")
@@ -116,6 +121,7 @@ public class DocumentsResource {
     }
 
     @POST
+    @Secured
     @Path("share")
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Shares specified document with specified user")
@@ -140,6 +146,7 @@ public class DocumentsResource {
     }
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
     @ApiOperation(value="Searches for documents by keyword", response = Document.class)

@@ -50,6 +50,7 @@ public class UsersResource {
      * @return All registered users
      */
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Return all registered users", response = UserWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
@@ -73,6 +74,7 @@ public class UsersResource {
      *
      */
     @POST
+    @Secured
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Create new user with requested data")
@@ -95,6 +97,7 @@ public class UsersResource {
      * @return Serialized user with requested id
      */
     @GET
+    @Secured
     @Path("{userId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Get user with requested ID", response = UserWrapper.class)
@@ -114,6 +117,7 @@ public class UsersResource {
     * Method handling HTTP PUT requests and update user according to id.
     */
     @PUT
+    @Secured
     @ApiOperation(value="Update user with presented data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 400, message= "Bar parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
@@ -134,6 +138,7 @@ public class UsersResource {
      *
      */
     @DELETE
+    @Secured
     @Path("{userId}")
     @ApiOperation(value="Delete user of requested ID")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),

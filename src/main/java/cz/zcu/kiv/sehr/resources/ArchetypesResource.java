@@ -37,6 +37,7 @@ public class ArchetypesResource {
     public static final int DEFAULT_LIMIT = 10;
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds archetypes", response = Document.class)
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
@@ -57,6 +58,7 @@ public class ArchetypesResource {
     }
 
     @GET
+    @Secured
     @Path("{archetypeId}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Finds archetype with specific ID", response = Document.class)
@@ -74,6 +76,7 @@ public class ArchetypesResource {
     }
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("list")
     @ApiOperation(value="Lists all archetypes", response = Document.class, responseContainer = "List")
@@ -88,6 +91,7 @@ public class ArchetypesResource {
     }
 
     @DELETE
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Deletes archetype with specific ID")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
@@ -106,6 +110,7 @@ public class ArchetypesResource {
     }
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Lists all archetype addition requests", response = ArchetypeRequest.class, responseContainer = "List")
@@ -125,6 +130,7 @@ public class ArchetypesResource {
     }
 
     @POST
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Consumes(MediaType.APPLICATION_JSON)
     @Path("request")
@@ -141,6 +147,7 @@ public class ArchetypesResource {
     }
 
     @DELETE
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("request")
     @ApiOperation(value="Delete request for archetype addition")
@@ -158,6 +165,7 @@ public class ArchetypesResource {
     }
 
     @POST
+    @Secured
     @Consumes(MediaType.MULTIPART_FORM_DATA)
     @ApiOperation(value="Add archetype from ADL file")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
@@ -182,6 +190,7 @@ public class ArchetypesResource {
     }
 
     @GET
+    @Secured
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
     @ApiOperation(value="Searches for archetypes by keyword", response = Document.class)
