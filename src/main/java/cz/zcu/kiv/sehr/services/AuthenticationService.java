@@ -91,4 +91,14 @@ public class AuthenticationService {
     public boolean invalidateToken(String token) {
         return token_map.remove(token) == null;
     }
+
+    /**
+     * Find user with requested token
+     *
+     */
+    public UserWrapper findUser(String token) {
+       if (!validateToken(token)) return null;
+
+       return token_map.get(token);
+    }
 }
