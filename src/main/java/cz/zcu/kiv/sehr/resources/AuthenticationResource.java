@@ -9,8 +9,6 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import org.glassfish.jersey.media.multipart.FormDataParam;
-
 import cz.zcu.kiv.sehr.model.AuthenticationResponse;
 import cz.zcu.kiv.sehr.model.UserWrapper;
 import cz.zcu.kiv.sehr.services.AuthenticationService;
@@ -55,7 +53,7 @@ public class AuthenticationResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Authenticate user", response = AuthenticationResponse.class)
     @ApiResponses(value = { @ApiResponse(code = 403, message = "Username or password") } )
-    public Response loginUser(@FormDataParam("credentials") AuthenticationRequest credentials) {
+    public Response loginUser(AuthenticationRequest credentials) {
         Response res = null;
         AuthenticationResponse response = new AuthenticationResponse();
 

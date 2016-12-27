@@ -40,8 +40,9 @@ public class AuthenticationService {
         UserWrapper loggedUser = new UserWrapper();
 
         List<Document> users = UsersDAO.getInstance().getUsers(new PagingParams(0, 0));
+
         for (Document user : users) {
-            if ((username == user.getString("username")) && (password == user.getString("password"))) {
+            if ((username.equals(user.getString("username"))) && (password.equals(user.getString("password")))) {
 
                 // Prepare user object to return
                 loggedUser.setUsername(user.getString("username"));
@@ -89,7 +90,7 @@ public class AuthenticationService {
      *
      */
     public boolean invalidateToken(String token) {
-        return token_map.remove(token) == null;
+        return token_map.remove(token, findUser(token));
     }
 
     /**
