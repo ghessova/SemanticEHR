@@ -2,10 +2,13 @@ package cz.zcu.kiv.sehr.model;
 
 import org.bson.Document;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Object representing single user within aplication
  *
  */
+@XmlRootElement
 public class UserWrapper {
 
     String username;

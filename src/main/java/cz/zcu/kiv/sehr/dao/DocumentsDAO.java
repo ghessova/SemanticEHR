@@ -65,7 +65,7 @@ public class DocumentsDAO {
         record.append("datetime", new Date().toString()); //todo date format
         record.append("sharedWith", new ArrayList<String>());
         record.append("data", document);
-        return Config.getDBC().addDocument(record, Config.DEFINITIONS) ? 1 : 0;
+        return Config.getDBC().addDocument(record, Config.DOCUMENTS) ? 1 : 0;
 
     }
 

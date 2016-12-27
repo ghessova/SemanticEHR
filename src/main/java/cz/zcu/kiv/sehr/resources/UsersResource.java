@@ -1,15 +1,6 @@
 package cz.zcu.kiv.sehr.resources;
 
-import javax.ws.rs.Consumes;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
+import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -52,7 +43,7 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Return all registered users", response = UserWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response getUsers(@QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + PAGE_SIZE) String count) {
+    public Response getUsers(@HeaderParam("token") String token, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + PAGE_SIZE) String count) {
         Response res = null;
 
         PagingParams pagingParams = Utils.processPagingParams(from, count);
@@ -77,7 +68,7 @@ public class UsersResource {
     @ApiOperation(value="Create new user with requested data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response addUser(UserWrapper user) {
+    public Response addUser(@HeaderParam("token") String token, UserWrapper user) {
         Response res = null;
         long added = UsersDB.insertUser(user);
 
@@ -98,7 +89,7 @@ public class UsersResource {
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Get user with requested ID", response = UserWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 401, message = "Invalid access token") })
-    public Response getUser(@PathParam("userId") String documentId) {
+    public Response getUser(@HeaderParam("token") String token, @PathParam("userId") String documentId) {
         Response res = null;
         Document user = UsersDB.findUserById(documentId);
 
@@ -116,7 +107,7 @@ public class UsersResource {
     @ApiOperation(value="Update user with presented data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 400, message= "Bar parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response updateUser(UserWrapper user) {
+    public Response updateUser(@HeaderParam("token") String token, UserWrapper user) {
         Response res = null;
         long updated = UsersDB.insertUser(user);
 
@@ -137,7 +128,7 @@ public class UsersResource {
     @ApiOperation(value="Delete user of requested ID")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 404, message= "User not found"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response deleteUser(@PathParam("userId") String documentId) {
+    public Response deleteUser(@HeaderParam("token") String token, @PathParam("userId") String documentId) {
         Response res = null;
         long deleted = UsersDB.deleteUserById(documentId);
 

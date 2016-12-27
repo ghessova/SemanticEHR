@@ -1,9 +1,12 @@
 package cz.zcu.kiv.sehr.model;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * Crate containing login credentials
  *
  */
+@XmlRootElement
 public class AuthenticationRequest {
 
     /** Username */

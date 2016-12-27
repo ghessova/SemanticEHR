@@ -2,12 +2,14 @@ package cz.zcu.kiv.sehr.model;
 
 import org.bson.Document;
 
+import javax.xml.bind.annotation.XmlRootElement;
 import java.util.Date;
 import java.util.List;
 
 /**
  * Created by ondraprazak on 20.12.16.
  */
+@XmlRootElement
 public class DocumentWrapper {
 
     Date created;
