@@ -1,5 +1,6 @@
 package cz.zcu.kiv.sehr.model;
 
+import org.bson.Document;
 
 /**
  * Response used by AuthenticationResource on login
@@ -9,7 +10,7 @@ public class AuthenticationResponse {
 
     String accessToken;
 
-    UserWrapper user;
+    Document user;
 
     public String getAccessToken() {
         return accessToken;
@@ -19,11 +20,11 @@ public class AuthenticationResponse {
         this.accessToken = accessToken;
     }
 
-    public UserWrapper getUser() {
+    public Document getUser() {
         return user;
     }
 
-    public void setUser(UserWrapper user) {
+    public void setUser(Document user) {
         this.user = user;
     }
 }

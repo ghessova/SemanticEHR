@@ -9,7 +9,6 @@ import java.util.Map;
 import org.bson.Document;
 
 import cz.zcu.kiv.sehr.dao.UsersDAO;
-import cz.zcu.kiv.sehr.model.UserWrapper;
 import cz.zcu.kiv.sehr.utils.PagingParams;
 
 /**
@@ -22,11 +21,11 @@ public class AuthenticationService {
     private static final AuthenticationService INSTANCE = new AuthenticationService();
 
     /** Accesstoken created to users */
-    private Map<String, UserWrapper> token_map = null;
+    private Map<String, Document> token_map = null;
 
     /** Constructor */
     private AuthenticationService() {
-        token_map = new HashMap<String, UserWrapper>();
+        token_map = new HashMap<String, Document>();
     }
 
     /** Instance getter */
@@ -36,22 +35,14 @@ public class AuthenticationService {
      * Performs authentication and access token creation
      *
      */
-    public UserWrapper authenticate(String username, String password) throws Exception {
-        UserWrapper loggedUser = new UserWrapper();
-
+    public Document authenticate(String username, String password) throws Exception {
         List<Document> users = UsersDAO.getInstance().getUsers(new PagingParams(0, 0));
 
         for (Document user : users) {
             if ((username.equals(user.getString("username"))) && (password.equals(user.getString("password")))) {
 
-                // Prepare user object to return
-                loggedUser.setUsername(user.getString("username"));
-                loggedUser.setPassword(user.getString("password"));
-                loggedUser.setRole(user.getString("role"));
-                loggedUser.setEmailAddress(user.getString("emailAddress"));
-
                 // Return loggedUser
-                return loggedUser;
+                return user;
             }
         }
 
@@ -62,7 +53,7 @@ public class AuthenticationService {
      * Create new token for user
      *
      */
-    public String issueToken(UserWrapper user) {
+    public String issueToken(Document user) {
         String token = null;
 
         // Generate UNIQUE secure random token
@@ -97,7 +88,7 @@ public class AuthenticationService {
      * Find user with requested token
      *
      */
-    public UserWrapper findUser(String token) {
+    public Document findUser(String token) {
        if (!validateToken(token)) return null;
 
        return token_map.get(token);

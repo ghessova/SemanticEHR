@@ -9,10 +9,11 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import cz.zcu.kiv.sehr.model.AuthenticationResponse;
-import cz.zcu.kiv.sehr.model.UserWrapper;
-import cz.zcu.kiv.sehr.services.AuthenticationService;
+import org.bson.Document;
+
 import cz.zcu.kiv.sehr.model.AuthenticationRequest;
+import cz.zcu.kiv.sehr.model.AuthenticationResponse;
+import cz.zcu.kiv.sehr.services.AuthenticationService;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -57,7 +58,7 @@ public class AuthenticationResource {
         Response res = null;
         AuthenticationResponse response = new AuthenticationResponse();
 
-        UserWrapper user = null;
+        Document user = null;
         String token = null;
 
         try {
