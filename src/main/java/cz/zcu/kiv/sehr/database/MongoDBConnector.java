@@ -109,6 +109,14 @@ public class MongoDBConnector implements DBConnector {
     }
 
     @Override
+    public long removeDocumentByFieldValue(String field, Object value, String collection) {
+        BasicDBObject query = new BasicDBObject();
+        query.put(field, value);
+        return removeDocument(query, collection);
+
+    }
+
+    @Override
     public long removeDocument(Bson query, String collection) {
 
         try {
@@ -126,6 +134,17 @@ public class MongoDBConnector implements DBConnector {
     public Document findDocumentById(String id, String collection) {
         BasicDBObject query = new BasicDBObject();
         query.put("_id", new ObjectId(id));
+        List<Document> results = findDocuments(query, collection, 0, 0);
+        if (results.size() > 0) {
+            return results.get(0);
+        }
+        return null;
+    }
+
+    @Override
+    public Document findDocumentByFieldValue(String field, Object value, String collection) {
+        BasicDBObject query = new BasicDBObject();
+        query.put(field, value);
         List<Document> results = findDocuments(query, collection, 0, 0);
         if (results.size() > 0) {
             return results.get(0);
@@ -178,6 +197,10 @@ public class MongoDBConnector implements DBConnector {
 
         mongoCollection = getDatabase().getCollection(Config.DOCUMENTS);
         mongoCollection.createIndex(textIndex);
+
+        mongoCollection = getDatabase().getCollection(Config.USERS);
+        uniqueIndex = new Document("username", 3);
+        mongoCollection.createIndex(uniqueIndex, new IndexOptions().unique(true)); //creates index if not exists, archetypeId must be unique
 
 
     }

@@ -35,6 +35,8 @@ public interface DBConnector {
      */
     long removeDocumentById(String id, String collection);
 
+    long removeDocumentByFieldValue(String field, Object value, String collection);
+
     /**
      * Attempts to delete document from a collections .
      *
@@ -52,6 +54,8 @@ public interface DBConnector {
      * @return document or null if not found
      */
     Document findDocumentById(String id, String collection);
+
+    Document findDocumentByFieldValue(String field, Object value, String collection);
 
     /**
      * Finds documents by query.

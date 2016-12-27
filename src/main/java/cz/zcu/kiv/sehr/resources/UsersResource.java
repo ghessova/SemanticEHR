@@ -85,13 +85,13 @@ public class UsersResource {
      * @return Serialized user with requested id
      */
     @GET
-    @Path("{userId}")
+    @Path("{username}")
     @Produces(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Get user with requested ID", response = UserWrapper.class)
     @ApiResponses(value = { @ApiResponse(code = 404, message = "User not found"), @ApiResponse(code = 401, message = "Invalid access token") })
-    public Response getUser(@HeaderParam("token") String token, @PathParam("userId") String documentId) {
+    public Response getUser(@HeaderParam("token") String token, @PathParam("username") String username) {
         Response res = null;
-        Document user = UsersDB.findUserById(documentId);
+        Document user = UsersDB.findUserByUsername(username);
 
         // According to result, build response
         res = (user == null) ? Response.status(Response.Status.NOT_FOUND).build() :
@@ -124,13 +124,13 @@ public class UsersResource {
      *
      */
     @DELETE
-    @Path("{userId}")
+    @Path("{username}")
     @ApiOperation(value="Delete user of requested ID")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 404, message= "User not found"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response deleteUser(@HeaderParam("token") String token, @PathParam("userId") String documentId) {
+    public Response deleteUser(@HeaderParam("token") String token, @PathParam("username") String username) {
         Response res = null;
-        long deleted = UsersDB.deleteUserById(documentId);
+        long deleted = UsersDB.deleteUserByName(username);
 
         // Build response
         res = (deleted > 0) ? Response.status(Response.Status.NO_CONTENT).build() :

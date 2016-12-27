@@ -10,7 +10,7 @@ public class AuthenticationResponse {
 
     String accessToken;
 
-    Document user;
+    UserWrapper user;
 
     public String getAccessToken() {
         return accessToken;
@@ -20,11 +20,11 @@ public class AuthenticationResponse {
         this.accessToken = accessToken;
     }
 
-    public Document getUser() {
+    public UserWrapper getUser() {
         return user;
     }
 
-    public void setUser(Document user) {
+    public void setUser(UserWrapper user) {
         this.user = user;
     }
 }

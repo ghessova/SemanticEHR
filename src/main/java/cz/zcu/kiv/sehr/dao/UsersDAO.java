@@ -42,7 +42,17 @@ public class UsersDAO {
         return Config.getDBC().findDocumentById(userId, Config.USERS);
     }
 
+    public Document findUserByUsername(String username)
+    {
+        return Config.getDBC().findDocumentByFieldValue("username", username, Config.USERS);
+    }
+
     public long deleteUserById(String userId) {
         return Config.getDBC().removeDocumentById(userId, Config.USERS);
+    }
+
+    public long deleteUserByName(String username)
+    {
+        return Config.getDBC().removeDocumentByFieldValue("username", username, Config.USERS);
     }
 }

@@ -17,7 +17,7 @@ public class UserWrapper {
 
     String emailAddress;
 
-    String role;
+    Role role;
 
     public void setUsername(String username) {
         this.username = username;
@@ -31,7 +31,7 @@ public class UserWrapper {
         this.emailAddress = emailAddress;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 
@@ -47,7 +47,7 @@ public class UserWrapper {
         return emailAddress;
     }
 
-    public String getRole() {
+    public Role getRole() {
         return role;
     }
 
@@ -56,7 +56,7 @@ public class UserWrapper {
         record.append("username", username);
         record.append("password", password);
         record.append("emailAddress", emailAddress);
-        record.append("role", role);
+        record.append("role", role.toString());
 
         return record;
     }

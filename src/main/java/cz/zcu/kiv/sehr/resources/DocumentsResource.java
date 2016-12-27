@@ -3,6 +3,7 @@ package cz.zcu.kiv.sehr.resources;
 import com.mongodb.util.JSON;
 import cz.zcu.kiv.sehr.dao.DocumentsDAO;
 import cz.zcu.kiv.sehr.model.DocumentWrapper;
+import cz.zcu.kiv.sehr.model.UserWrapper;
 import cz.zcu.kiv.sehr.services.AuthenticationService;
 import cz.zcu.kiv.sehr.utils.PagingParams;
 import cz.zcu.kiv.sehr.utils.Utils;
@@ -39,8 +40,8 @@ public class DocumentsResource {
         if (pagingParams == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        String userId = AuthenticationService.getInstance().findUser(token).getObjectId("_id").toString();
-        List<Document> results = documentsDAO.findDocuments(archetypeId, userId, pagingParams);
+        UserWrapper user = AuthenticationService.getInstance().findUser(token);
+        List<Document> results = documentsDAO.findDocuments(archetypeId, user, pagingParams);
 
         return Response
                 .status(Response.Status.OK)
@@ -92,8 +93,8 @@ public class DocumentsResource {
     @ApiOperation(value="Submits new document containing user data")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
     public Response uploadDocument(@HeaderParam("token") String token, Document document, @QueryParam("name") String name, @QueryParam("archetypeId") String archetypeId){
-        String userId = AuthenticationService.getInstance().findUser(token).getObjectId("_id").toString();
-        long added = documentsDAO.insertDocument(userId, name, archetypeId, document);
+        UserWrapper user = AuthenticationService.getInstance().findUser(token);
+        long added = documentsDAO.insertDocument(user, name, archetypeId, document);
         if(added > 0)
             return Response.status(200).build();
         else
@@ -108,12 +109,12 @@ public class DocumentsResource {
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response listDocuments(@HeaderParam("token") String token, @QueryParam("from") String from, @QueryParam("count") String count, @QueryParam("archetypeId") String archetypeId) {
-        String userId = AuthenticationService.getInstance().findUser(token).getObjectId("_id").toString();
+        UserWrapper user = AuthenticationService.getInstance().findUser(token);
         PagingParams pagingParams = Utils.processPagingParams(from, count);
         if (pagingParams == null) {
             return Response.status(Response.Status.BAD_REQUEST).build();
         }
-        List<DocumentWrapper> results = documentsDAO.listDocuments(archetypeId, userId, pagingParams);
+        List<DocumentWrapper> results = documentsDAO.listDocuments(archetypeId, user, pagingParams);
         return Response
                 .status(200)
                 .entity(JSON.serialize(results))

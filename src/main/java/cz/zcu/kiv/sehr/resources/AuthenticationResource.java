@@ -9,6 +9,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import cz.zcu.kiv.sehr.model.UserWrapper;
 import org.bson.Document;
 
 import cz.zcu.kiv.sehr.model.AuthenticationRequest;
@@ -58,7 +59,7 @@ public class AuthenticationResource {
         Response res = null;
         AuthenticationResponse response = new AuthenticationResponse();
 
-        Document user = null;
+        UserWrapper user = null;
         String token = null;
 
         try {
