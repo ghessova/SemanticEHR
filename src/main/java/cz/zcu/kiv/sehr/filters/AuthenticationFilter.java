@@ -15,7 +15,7 @@ public class AuthenticationFilter implements ContainerRequestFilter {
     @Override
     public void filter(ContainerRequestContext requestContext) throws IOException {
         // TODO Figure out why this doesn't work with NameBinding
-        if (requestContext.getUriInfo().getPath().endsWith("swagger.json") || requestContext.getUriInfo().getPath().contains("/auth/"))
+        if (requestContext.getUriInfo().getPath().endsWith("swagger.json") || requestContext.getUriInfo().getPath().contains("auth"))
             return;
 
         String token = requestContext.getHeaderString("token");
