@@ -86,7 +86,7 @@ public class DocumentsResource {
     @Consumes(MediaType.APPLICATION_JSON)
     @ApiOperation(value="Submits new document containing user data")
     @ApiResponses(value = { @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") } )
-    public Response uploadDocument(@FormDataParam("document") Document document, @QueryParam("name") String name, @QueryParam("archetypeId") String archetypeId){
+    public Response uploadDocument(Document document, @QueryParam("name") String name, @QueryParam("archetypeId") String archetypeId){
         //// TODO: 24.12.16 strange parameters
         long added = documentsDAO.insertDocument("0" /*TODO */, name, archetypeId, document);
         if(added > 0)

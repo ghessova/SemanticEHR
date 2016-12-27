@@ -77,7 +77,7 @@ public class UsersResource {
     @ApiOperation(value="Create new user with requested data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response addUser(@FormDataParam("user") UserWrapper user) {
+    public Response addUser(UserWrapper user) {
         Response res = null;
         long added = UsersDB.insertUser(user);
 
@@ -116,7 +116,7 @@ public class UsersResource {
     @ApiOperation(value="Update user with presented data")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
         @ApiResponse(code = 400, message= "Bar parameters"), @ApiResponse(code = 401, message = "Invalid access token") } )
-    public Response updateUser(@FormDataParam("user") UserWrapper user) {
+    public Response updateUser(UserWrapper user) {
         Response res = null;
         long updated = UsersDB.insertUser(user);
 
