@@ -32,7 +32,7 @@ public class DocumentsResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value="Finds documents by archetypeId or for a specific user", response = DocumentWrapper.class)
+    @ApiOperation(value="Finds documents by archetypeId or for a specific user", response = DocumentWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getDocuments(@HeaderParam("token") String token, @QueryParam("archetypeId") String archetypeId, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
@@ -105,7 +105,7 @@ public class DocumentsResource {
     @GET
     @Path("list")
     @Produces(MediaType.APPLICATION_JSON) //userId will be used e.g. by data sharing
-    @ApiOperation(value="Lists basic info about documents")
+    @ApiOperation(value="Lists basic info about documents", response = DocumentWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response listDocuments(@HeaderParam("token") String token, @QueryParam("from") String from, @QueryParam("count") String count, @QueryParam("archetypeId") String archetypeId) {
@@ -124,7 +124,7 @@ public class DocumentsResource {
     @GET
     @Path("share")
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value="Lists shared documents")
+    @ApiOperation(value="Lists shared documents", response = DocumentWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response getSharedDocuments(@HeaderParam("token") String token, @QueryParam("from") String from, @QueryParam("count") String count) {
@@ -168,7 +168,7 @@ public class DocumentsResource {
     @GET
     @Produces(MediaType.APPLICATION_JSON)
     @Path("search")
-    @ApiOperation(value="Searches for documents by keyword", response = Document.class)
+    @ApiOperation(value="Searches for documents by keyword", response = DocumentWrapper.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response searchArchetypes(@HeaderParam("token") String token, @QueryParam("keyword") @DefaultValue("0") String keyword, @QueryParam("from") @DefaultValue("0") String from, @QueryParam("count") @DefaultValue("" + DEFAULT_LIMIT) String count) {
