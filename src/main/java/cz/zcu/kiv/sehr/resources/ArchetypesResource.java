@@ -4,6 +4,8 @@ import com.mongodb.util.JSON;
 import cz.zcu.kiv.sehr.archetypes.ArchetypeParser;
 import cz.zcu.kiv.sehr.dao.ArchetypesDAO;
 import cz.zcu.kiv.sehr.model.ArchetypeRequest;
+import cz.zcu.kiv.sehr.model.UserWrapper;
+import cz.zcu.kiv.sehr.services.AuthenticationService;
 import cz.zcu.kiv.sehr.utils.Config;
 import cz.zcu.kiv.sehr.utils.PagingParams;
 import cz.zcu.kiv.sehr.utils.Utils;
@@ -35,7 +37,7 @@ public class ArchetypesResource {
 
     @GET
     @Produces(MediaType.APPLICATION_JSON)
-    @ApiOperation(value="Finds archetypes", response = Document.class)
+    @ApiOperation(value="Finds archetypes", response = Document.class, responseContainer = "List")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
     @ApiImplicitParams({
@@ -143,11 +145,9 @@ public class ArchetypesResource {
     @ApiOperation(value="Request for adding new archetype")
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 400, message = "Bad parameters"), @ApiResponse(code = 403, message = "Invalid access token") })
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "token", value = "auth token", required = true, dataType = "string", paramType = "header")
-    })
-    public Response requestAddingArchetype(JsonObject body, @QueryParam("archetypeId") String archetypeId) {
-        long added = archetypesDAO.insertRequest("0", archetypeId); // TODO add real user id
+    public Response requestAddingArchetype(@HeaderParam("token") String token, @QueryParam("archetypeId") String archetypeId) {
+        UserWrapper user = AuthenticationService.getInstance().findUser(token);
+        long added = archetypesDAO.insertRequest(user.getUsername(), archetypeId);
         if(added > 0)
             return Response.status(200).build();
         else
