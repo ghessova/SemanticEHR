@@ -121,6 +121,26 @@ public class DocumentsResource {
                 .build();
     }
 
+    @GET
+    @Path("share")
+    @Produces(MediaType.APPLICATION_JSON)
+    @ApiOperation(value="Lists shared documents")
+    @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
+            @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
+    public Response getSharedDocuments(@HeaderParam("token") String token, @QueryParam("from") String from, @QueryParam("count") String count) {
+        PagingParams pagingParams = Utils.processPagingParams(from, count);
+        if (pagingParams == null) {
+            return Response.status(Response.Status.BAD_REQUEST).build();
+        }
+        UserWrapper user = AuthenticationService.getInstance().findUser(token);
+        List<Document> results = documentsDAO.findDocumentsByFieldValue("sharedWith", user.getUsername(), pagingParams);
+
+        return Response
+                .status(Response.Status.OK)
+                .entity(JSON.serialize(results))
+                .build();
+    }
+
     @POST
     @Path("share")
     @Consumes(MediaType.APPLICATION_JSON)
@@ -128,14 +148,14 @@ public class DocumentsResource {
     @ApiResponses(value = { @ApiResponse(code = 204, message = "No content"),
             @ApiResponse(code = 404, message = "Not found"), @ApiResponse(code = 403, message = "Invalid access token") })
     public Response shareDocument(@HeaderParam("token") String token, @QueryParam("documentId") String documentId,
-                                   @QueryParam("userId") String userId) {
+                                   @QueryParam("username") String username) {
         Document document = documentsDAO.findDocumentById(documentId);
         if(document == null)
             return Response.status(404).build();
         List<String> users = (List<String>)document.get("sharedWith");
-        if(!users.contains(userId))
+        if(!users.contains(username))
         {
-            users.add(userId);
+            users.add(username);
             documentsDAO.editDocument(documentId, document.toJson());
         }
 

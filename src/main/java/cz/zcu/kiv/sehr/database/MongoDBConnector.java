@@ -142,12 +142,12 @@ public class MongoDBConnector implements DBConnector {
     }
 
     @Override
-    public Document findDocumentByFieldValue(String field, Object value, String collection) {
+    public List<Document> findDocumentsByFieldValue(String field, Object value, String collection) {
         BasicDBObject query = new BasicDBObject();
         query.put(field, value);
         List<Document> results = findDocuments(query, collection, 0, 0);
         if (results.size() > 0) {
-            return results.get(0);
+            return results;
         }
         return null;
     }

@@ -55,7 +55,7 @@ public interface DBConnector {
      */
     Document findDocumentById(String id, String collection);
 
-    Document findDocumentByFieldValue(String field, Object value, String collection);
+    List<Document> findDocumentsByFieldValue(String field, Object value, String collection);
 
     /**
      * Finds documents by query.

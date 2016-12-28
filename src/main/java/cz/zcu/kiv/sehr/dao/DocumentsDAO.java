@@ -52,6 +52,12 @@ public class DocumentsDAO {
         return Config.getDBC().findDocuments(query, Config.DOCUMENTS,  pagingParams.skip, pagingParams.limit);
     }
 
+    public List<Document> findDocumentsByFieldValue(String field, Object value, PagingParams pagingParams)
+    {
+        BasicDBObject query = new BasicDBObject(field, value);
+        return Config.getDBC().findDocuments(query, Config.DOCUMENTS, pagingParams.skip, pagingParams.limit);
+    }
+
 
     public long deleteDocumentById(String id) {
 

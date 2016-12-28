@@ -44,7 +44,7 @@ public class UsersDAO {
 
     public Document findUserByUsername(String username)
     {
-        return Config.getDBC().findDocumentByFieldValue("username", username, Config.USERS);
+        return Config.getDBC().findDocumentsByFieldValue("username", username, Config.USERS).get(0);
     }
 
     public long deleteUserById(String userId) {
